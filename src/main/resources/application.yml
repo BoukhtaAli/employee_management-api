@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: employee_management_system
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    database: MYSQL
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/employee_management_db?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    username: root
+    password:
+
+server:
+  port: 6060
+
+cors:
+  enabled: true
+  allowedAddresses: http://localhost:4200
