@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
@@ -18,19 +19,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic().and().csrf().and().cors().and().authorizeRequests().antMatchers("/api/v1/**").authenticated().and()
-            .formLogin()
-            .permitAll();
-    }
-
-    @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.csrf().disable().cors().and()
+                .authorizeRequests().antMatchers("/api/v1/**").hasAnyRole("ADMIN","USER").and()
+                .httpBasic();
+    }
+
     @Bean
-    public static BCryptPasswordEncoder passwordEncoder(){
+    public static PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 }
