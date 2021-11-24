@@ -38,7 +38,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(new AuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         http.authorizeRequests().antMatchers("/login", "/token/refresh").permitAll();
-        http.authorizeRequests().antMatchers("/api/v1/**").hasAnyRole("USER");
+        http.authorizeRequests().antMatchers("/api/v1/employee/**").hasAnyRole("USER", "ADMIN", "SUPER_ADMIN");
     }
 
     @Bean

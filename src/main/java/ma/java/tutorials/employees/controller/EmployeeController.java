@@ -16,7 +16,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/employee")
+@RequestMapping("/api/v1/employee/")
 public class EmployeeController {
 
     private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
@@ -42,7 +42,7 @@ public class EmployeeController {
         return new ResponseEntity<>(employeeService.updateExistingEmployee(employeeDTO), HttpStatus.OK);
     }
 
-    @GetMapping("/id/{id}")
+    @GetMapping("id/{id}")
     public ResponseEntity<EmployeeDTO> getEmployee(@PathVariable("id") Long employeeId){
         logger.info("Retrieving Single Employee.");
         return new ResponseEntity<>(employeeService.retrieveEmployeeById(employeeId), HttpStatus.OK);
@@ -54,7 +54,7 @@ public class EmployeeController {
         return new ResponseEntity<>(employeeService.retrieveEmployeeList(pageable.getPageNumber(), pageable.getPageSize()), HttpStatus.OK);
     }
 
-    @DeleteMapping("/id/{id}")
+    @DeleteMapping("id/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable("id") Long id){
         logger.info("Deleting Employee.");
         employeeService.deleteEmployeeById(id);

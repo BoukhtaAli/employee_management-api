@@ -10,6 +10,7 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/employee_management_db?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
     username: root
     password:
+    driver-class-name: com.mysql.cj.jdbc.NonRegisteringDriver
 
 server:
   port: 6060

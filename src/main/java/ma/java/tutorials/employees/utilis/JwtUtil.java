@@ -2,7 +2,6 @@ package ma.java.tutorials.employees.utilis;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import ma.java.tutorials.employees.dto.RoleDTO;
 import ma.java.tutorials.employees.dto.UserDTO;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +31,7 @@ public class JwtUtil {
 
         return JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis()+1000 * 60 * 10))
+                .withExpiresAt(new Date(System.currentTimeMillis()+ 1000 * 60 * 10))
                 .withIssuer(url)
                 .sign(algorithm);
     }
