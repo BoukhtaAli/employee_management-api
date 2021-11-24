@@ -11,5 +11,9 @@ public class RoleDTO implements Serializable {
 
     private Long id;
 
-    private String role = "user";
+    private String role = "USER";
+
+    public RoleDTO(String role) {
+        this.role = role;
+    }
 }
