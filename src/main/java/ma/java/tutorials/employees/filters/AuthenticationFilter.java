@@ -49,12 +49,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         String accessToken = JwtUtil.generateToken(user, request.getRequestURI());
         String refreshToken = JwtUtil.refreshToken(user, request.getRequestURI());
 
-        Map<String, String> tokens = new HashMap<>(0);
-        tokens.put("access_token", accessToken);
-        tokens.put("refresh_token", refreshToken);
+        Map<String, String> responseData = new HashMap<>(0);
+        responseData.put("access_token", accessToken);
+        responseData.put("refresh_token", refreshToken);
+        responseData.put("username", user.getUsername());
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        new ObjectMapper().writeValue(response.getOutputStream(),tokens);
+        new ObjectMapper().writeValue(response.getOutputStream(),responseData);
     }
 }
 
