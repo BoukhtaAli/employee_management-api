@@ -1,6 +1,7 @@
 package ma.java.tutorials.employees.service.impl;
 
 import ma.java.tutorials.employees.domain.User;
+import ma.java.tutorials.employees.dto.RoleDTO;
 import ma.java.tutorials.employees.dto.UserDTO;
 import ma.java.tutorials.employees.mapper.UserMapper;
 import ma.java.tutorials.employees.repository.UserRepository;
@@ -9,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService implements IUserService {
@@ -26,9 +29,13 @@ public class UserService implements IUserService {
     @Override
     public UserDTO addUser(UserDTO userDTO) {
 
-        User user = userMapper.toUserEntity(userDTO);
+        Set<RoleDTO> roles  = new HashSet<>();
+        roles.add(new RoleDTO("USER"));
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userDTO.setRoles(roles);
+        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+
+        User user = userMapper.toUserEntity(userDTO);
 
         return userMapper.toUserDTO(userRepository.save(user));
     }

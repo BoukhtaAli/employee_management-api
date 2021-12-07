@@ -1,7 +1,6 @@
 package ma.java.tutorials.employees.config;
 
-import ma.java.tutorials.employees.filters.AuthenticationFilter;
-import ma.java.tutorials.employees.filters.AuthorizationFilter;
+import ma.java.tutorials.employees.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +19,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UserDetailsConfiguration userDetailsService;
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    private AuthorizationFilter authorizationFilter;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -33,11 +38,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable().cors();
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint);
+        http.addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
 
-        http.addFilter(new AuthenticationFilter(authenticationManagerBean()));
-        http.addFilterBefore(new AuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
-
-        http.authorizeRequests().antMatchers("/login", "/token/refresh").permitAll();
+        http.authorizeRequests().antMatchers("/login", "/register").permitAll();
         http.authorizeRequests().antMatchers("/api/v1/employee/**").hasAnyRole("USER", "ADMIN", "SUPER_ADMIN");
     }
 
