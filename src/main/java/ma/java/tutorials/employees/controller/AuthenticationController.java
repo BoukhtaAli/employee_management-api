@@ -9,7 +9,6 @@ import ma.java.tutorials.employees.service.impl.UserDetailsServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,16 +26,11 @@ public class AuthenticationController {
     private IUserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<UserDTO> login( @RequestBody AuthRequestDTO authentication ) throws BusinessException {
+    public ResponseEntity<AuthResponseDTO> login( @RequestBody AuthRequestDTO authentication ) throws BusinessException {
 
         logger.info("Login Attempt By User: {}.", authentication.getUsername());
 
-        AuthResponseDTO responseDTO = userDetailsService.authenticate(authentication);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("access_token", responseDTO.getAccessToken());
-
-        return new ResponseEntity<>(responseDTO.getUser(), headers, HttpStatus.OK);
+        return new ResponseEntity<>(userDetailsService.authenticate(authentication), HttpStatus.OK);
     }
 
     @PostMapping("/register")
@@ -48,13 +42,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/token/refresh")
-    public ResponseEntity<Void> refreshToken ( @RequestHeader("AUTHORIZATION") String header ) throws BusinessException {
+    public ResponseEntity<String> refreshToken ( @RequestHeader("AUTHORIZATION") String header ) throws BusinessException {
 
         logger.info("Refresh Token Attempt.");
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("refresh_token", userDetailsService.refreshToken(header));
-
-        return new ResponseEntity(headers, HttpStatus.OK);
+        return new ResponseEntity(userDetailsService.refreshToken(header), HttpStatus.OK);
     }
 }
