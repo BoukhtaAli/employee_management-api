@@ -41,7 +41,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
         } else{
 
             final String header = request.getHeader("Authorization");
-            String jwtToken = null;
+            String jwtToken;
             String username = null;
 
             if(header != null && header.startsWith("Bearer ")){
@@ -52,7 +52,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
                     username = jwtUtil.getUsernameFromToken(jwtToken);
                 } catch (Exception exception){
                     logger.error(exception.getMessage());
-                    throw new BusinessException("Could Not Get Username from Token");
+                    filterChain.doFilter(request,response);
                 }
 
             } else {
