@@ -9,6 +9,7 @@ import ma.java.tutorials.employees.service.impl.UserDetailsServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,12 @@ public class AuthenticationController {
 
         logger.info("Login Attempt By User: {}.", authentication.getUsername());
 
-        return new ResponseEntity<>(userDetailsService.authenticate(authentication), HttpStatus.OK);
+        AuthResponseDTO response = userDetailsService.authenticate(authentication);
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("X-ACCESS-TOKEN",response.getAccessToken());
+
+        return new ResponseEntity<>(response, httpHeaders, HttpStatus.OK);
     }
 
     @PostMapping("/register")
@@ -46,6 +52,11 @@ public class AuthenticationController {
 
         logger.info("Refresh Token Attempt.");
 
-        return new ResponseEntity(userDetailsService.refreshToken(header), HttpStatus.OK);
+        String refreshToken = userDetailsService.refreshToken(header);
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("X-REFRESH-TOKEN",refreshToken);
+
+        return new ResponseEntity(refreshToken, httpHeaders, HttpStatus.OK);
     }
 }

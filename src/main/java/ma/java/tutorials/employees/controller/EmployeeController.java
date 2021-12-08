@@ -29,7 +29,7 @@ public class EmployeeController {
 
         if(bindingResult.hasErrors()){
             logger.error("Invalid request Body, field : {}, error : {}",bindingResult.getFieldError().getField(), bindingResult.getFieldError().getDefaultMessage());
-            throw new BusinessException(bindingResult.getFieldError().getDefaultMessage());
+            throw new BusinessException(bindingResult.getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
         }
 
         logger.info("Creating new Employee.");

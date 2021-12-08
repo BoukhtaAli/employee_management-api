@@ -9,6 +9,7 @@ import ma.java.tutorials.employees.service.IEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public class EmployeeService implements IEmployeeService {
     public EmployeeDTO updateExistingEmployee(EmployeeDTO employeeDTO) throws BusinessException {
 
         if(!employeeRepository.existsById(employeeDTO.getId())){
-            throw new BusinessException("Employee Not Found");
+            throw new BusinessException("Employee Not Found", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         Employee employee = employeeMapper.toEntity(employeeDTO);

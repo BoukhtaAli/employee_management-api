@@ -26,7 +26,7 @@ public class CorsConfiguration implements WebMvcConfigurer{
 
         registry.addMapping("/**")
                 .allowedMethods("PUT", "DELETE", "GET", "POST")
-                .allowedHeaders("Authorization", "Cache-Control", "Content-Type")
+                .allowedHeaders("*")
                 .allowedOrigins(this.allowedAddresses.toArray(new String[this.allowedAddresses.size()]));
     }
 
@@ -35,7 +35,7 @@ public class CorsConfiguration implements WebMvcConfigurer{
         org.springframework.web.cors.CorsConfiguration configuration = new org.springframework.web.cors.CorsConfiguration();
         configuration.setAllowedOrigins(this.allowedAddresses);
         configuration.setAllowCredentials(true);
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+        configuration.addAllowedHeader("*");
         configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

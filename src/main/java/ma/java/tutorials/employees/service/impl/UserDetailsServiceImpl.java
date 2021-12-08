@@ -9,6 +9,7 @@ import ma.java.tutorials.employees.utilis.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -78,9 +79,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,password));
 
         } catch( DisabledException disabledException ){
-            throw new BusinessException("User is disabled");
+            throw new BusinessException("User is disabled", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch ( BadCredentialsException badCredentialsException ){
-            throw new BusinessException("Bad Credentials");
+            throw new BusinessException("Bad Credentials", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -103,7 +104,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 username = jwtUtil.getUsernameFromToken(jwtToken);
             } catch (Exception exception){
                 logger.error(exception.getMessage());
-                throw new BusinessException("Could Not Get Username from Token");
+                throw new BusinessException("Could Not Get Username from Token", HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
             if(username !=null) {
@@ -116,17 +117,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
                 } else {
                     logger.error("Invalid or Expired Token");
-                    throw new BusinessException("Invalid or Expired Token");
+                    throw new BusinessException("Invalid or Expired Token", HttpStatus.INTERNAL_SERVER_ERROR);
                 }
 
             }else {
                 logger.error("Invalid Username");
-                throw new BusinessException("Invalid Username");
+                throw new BusinessException("Invalid Username", HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
         } else {
             logger.error("Header does not contain Bearer Token");
-            throw new BusinessException("Header does not contain Bearer Token");
+            throw new BusinessException("Header does not contain Bearer Token", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return refreshToken;

@@ -11,6 +11,6 @@ public class CustomControllerAdvice {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<String> handleBusinessException(BusinessException businessException){
-        return new ResponseEntity<>(businessException.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(businessException.getMessage(), businessException.getHttpStatus());
     }
 }
